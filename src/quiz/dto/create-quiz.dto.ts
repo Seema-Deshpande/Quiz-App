@@ -1,8 +1,20 @@
-import { IsNotEmpty, IsString, IsArray, ValidateNested } from 'class-validator';
+import { IsNotEmpty, IsString, IsArray, ValidateNested, IsNumber } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
 class QuestionDto {
+  @ApiProperty({
+    description: 'id',
+    type: Number,
+    format: 'number',
+    example: 12234,
+    uniqueItems: true,
+    required: true,
+  })
+  @IsNotEmpty()
+  @IsNumber()
+  id: number;
+
   @ApiProperty({
     description: 'Questions to be asked',
     type: String,
@@ -12,7 +24,7 @@ class QuestionDto {
   })
   @IsNotEmpty()
   @IsString()
-  text!: string;
+  text: string;
 
   @ApiProperty({
     description: 'options for the question',
@@ -32,10 +44,22 @@ class QuestionDto {
     required: true,
   })
   @IsNotEmpty()
-  correct_option!: number;
+  correct_option: number;
 }
 
 export class CreateQuizDto {
+  @ApiProperty({
+    description: 'id',
+    type: Number,
+    format: 'number',
+    example: 12234,
+    required: true,
+    uniqueItems: true,
+  })
+  @IsNotEmpty()
+  @IsNumber()
+  id: number;
+
   @ApiProperty({
     description: 'Type of the question',
     type: String,
@@ -45,10 +69,10 @@ export class CreateQuizDto {
   })
   @IsNotEmpty()
   @IsString()
-  title!: string;
+  title: string;
 
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => QuestionDto)
-  questions!: QuestionDto[];
+  questions: QuestionDto[];
 }

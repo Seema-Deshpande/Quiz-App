@@ -1,13 +1,19 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { LogLevel } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as dotenv from 'dotenv';
 import * as env from 'env-var';
 import { ResponseMessages } from './models/ResponseMessages';
 dotenv.config();
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule,{
+    logger: env
+    .get('LOGGER_LEVELS')
+    .default('log,error')
+    .asArray() as LogLevel[],
+  });
   app.useGlobalPipes(new ValidationPipe());
   const config = new DocumentBuilder()
   .setTitle(ResponseMessages.SWAGGER_TITLE)
